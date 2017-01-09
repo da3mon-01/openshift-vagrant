@@ -1,0 +1,33 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_become must be set to true
+#ansible_become=true
+
+deployment_type=origin
+openshift_master_cluster_hostname=master.192.168.33.10.xip.io
+openshift_master_cluster_public_hostname=master.192.168.33.10.xip.io
+openshift_master_default_subdomain=apps.192.168.33.10.xip.io
+
+# uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+# host group for masters
+[masters]
+master.192.168.33.10.xip.io openshift_hostname=master.192.168.33.10.xip.io openshift_ip=192.168.33.10 openshift_public_ip=192.168.33.10
+
+# host group for nodes, includes region info
+[nodes]
+master.192.168.33.10.xip.io openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_hostname=master.192.168.33.10.xip.io openshift_scheduleable=true openshift_ip=192.168.33.10 openshift_public_ip=192.168.33.10
+node.192.168.33.11.xip.io openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_hostname=node.192.168.33.11.xip.io openshift_ip=192.168.33.11 openshift_public_ip=192.168.33.11
+
+
+[nfs]
+master.192.168.33.10.xip.io
