@@ -1,14 +1,16 @@
 #!/bin/bash
 hostnamectl set-hostname master
+echo "192.168.33.10 master" >> /etc/hosts
+echo "192.168.33.11 node" >> /etc/hosts
 if [[ ! -d /root/.ssh ]] ; then
 	mkdir -p /root/.ssh
 fi
 cp /vagrant/vagrant /root/.ssh/id_rsa
+cat /vagrant/vagrant.pub >> /root/.ssh/authorized_keys
 chmod 700 /root/.ssh
 chmod 600 /root/.ssh/id_rsa
 chown root:root -R /root/.ssh
-yum install -y wget parted vim docker git net-tools bind-utils iptables-services bridge-utils bash-completion python-six;
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm;
+yum install -y wget parted vim docker git net-tools bind-utils iptables-services bridge-utils bash-completion python-six epel-release;
 yum -y --enablerepo=epel install ansible pyOpenSSL;
 echo "Creating Partition"
 parted /dev/sdb -a optimal --script mklabel msdos mkpart primary 0% 100% set 1 lvm on

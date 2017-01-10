@@ -1,5 +1,7 @@
 #!/bin/bash
 hostnamectl set-hostname node
+echo "192.168.33.10 master" >> /etc/hosts
+echo "192.168.33.11 node" >> /etc/hosts
 if [[ ! -d /root/.ssh ]] ; then
 	mkdir -p /root/.ssh
 fi
